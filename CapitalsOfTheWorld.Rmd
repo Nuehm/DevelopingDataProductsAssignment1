@@ -1,0 +1,78 @@
+---
+title: "Capitals of the World and their Population"
+author: "H. Richter"
+always_allow_html: yes
+date: "27. Oktober 2016"
+output: html_document
+---
+
+In the following map the capitals of the world are marked
+  
+- For each capital the name of the city, the country it belongs to and its population is given in the popup
+- The popups are clustered: Please zoom in
+- The circle size represent the population of the capital
+  
+The data were taken from [Laenderdaten](https://www.laenderdaten.info/download/capitals.csv). The mapping data are from [Open Street Map](http://www.openstreetmap.org/).
+  
+
+```{r, comment="", echo=FALSE}
+## Downloading the data:
+
+# download data
+download.file("https://www.laenderdaten.info/download/capitals.csv", 
+              destfile="./Capitals.csv") 
+
+# read data
+Capitals <- read.csv("./Capitals.csv", sep = ";")
+```
+
+```{r, warning=FALSE, message = FALSE, fig.width = 9, echo=FALSE}
+library(leaflet)
+
+Capitals %>% 
+      leaflet() %>%
+      addTiles() %>%
+      addMarkers(popup = paste(Capitals$City..en.,
+                               " (", Capitals$Country..en., "), ",
+                               "Population: ", 
+                               Capitals$Population,
+                               sep = ""),
+                 clusterOptions = markerClusterOptions()) %>%
+      addCircles(weight = 1, radius = sqrt(Capitals$Population) * 100)
+
+```
+
+## Code Chunks
+  
+The following code chunks were used:
+  
+```{r, comment="", eval=FALSE}
+
+# download data
+download.file("https://www.laenderdaten.info/download/capitals.csv", 
+              destfile="./Capitals.csv") 
+
+# read data
+Capitals <- read.csv("./Capitals.csv", sep = ";")
+```
+
+```{r}
+# labels
+print(names(Capitals))
+```
+  
+```{r, warning=FALSE, fig.width = 9, eval=FALSE}
+library(leaflet)
+
+Capitals %>% 
+      leaflet() %>%
+      addTiles() %>%
+      addMarkers(popup = paste(Capitals$City..en.,
+                               " (", Capitals$Country..en., "), ",
+                               "Population: ", 
+                               Capitals$Population,
+                               sep = ""),
+                 clusterOptions = markerClusterOptions()) %>%
+      addCircles(weight = 1, radius = sqrt(Capitals$Population) * 100)
+
+```
